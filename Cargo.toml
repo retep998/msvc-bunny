@@ -6,4 +6,4 @@ authors = ["Peter Atashian <retep998@gmail.com>"]
 [dependencies.winapi]
 git = "https://github.com/retep998/winapi-rs"
 branch = "dev"
-features = ["combaseapi", "minwindef", "oaidl", "objbase", "oleauto", "unknwnbase", "winerror", "winnt", "wtypes", "wtypesbase"]
+features = ["combaseapi", "minwindef", "oaidl", "objbase", "oleauto", "unknwnbase", "winerror", "winnt", "winreg", "wtypes", "wtypesbase"]
