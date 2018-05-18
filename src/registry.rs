@@ -5,10 +5,10 @@
 // All files in the project carrying such notice may not be copied, modified, or distributed
 // except according to those terms.
 
-use std::ffi::{OsString, OsStr};
+use std::ffi::{OsString};
 use std::ptr::null_mut;
 use winapi::shared::minwindef::{HKEY};
-use winapi::um::winnt::{KEY_READ, KEY_WOW64_32KEY, REG_SZ};
+use winapi::um::winnt::{KEY_READ, KEY_WOW64_32KEY};
 use winapi::um::winreg::{
     HKEY_LOCAL_MACHINE, RRF_RT_REG_SZ, RegCloseKey, RegGetValueW, RegOpenKeyExW,
 };
