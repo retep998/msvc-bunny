@@ -4,19 +4,27 @@
 // <LICENSE-MIT or http://opensource.org/licenses/MIT>, at your option.
 // All files in the project carrying such notice may not be copied, modified, or distributed
 // except according to those terms.
-use std::ffi::OsString;
-use std::ptr::null_mut;
-use winapi::Interface;
-use winapi::shared::minwindef::{LPFILETIME, ULONG};
-use winapi::shared::winerror::S_FALSE;
-use winapi::shared::wtypes::BSTR;
-use winapi::shared::wtypesbase::LPCOLESTR;
-use winapi::um::combaseapi::{CLSCTX_ALL, CoCreateInstance};
-use winapi::um::oaidl::LPSAFEARRAY;
-use winapi::um::unknwnbase::{IUnknown, IUnknownVtbl};
-use winapi::um::winnt::{HRESULT, LCID, LPCWSTR, PULONGLONG};
-
+use std::{
+    ffi::OsString,
+    ptr::null_mut,
+};
+use winapi::{
+    Class, Interface,
+    shared::{
+        minwindef::{LPFILETIME, ULONG},
+        winerror::S_FALSE,
+        wtypes::BSTR,
+        wtypesbase::LPCOLESTR,
+    },
+    um::{
+        combaseapi::{CLSCTX_ALL, CoCreateInstance},
+        oaidl::LPSAFEARRAY,
+        unknwnbase::{IUnknown, IUnknownVtbl},
+        winnt::{HRESULT, LCID, LPCWSTR, PULONGLONG},
+    },
+};
 use util::{BStr, ComPtr};
+
 // Bindings to the Setup.Configuration stuff
 ENUM!{enum InstanceState {
     eNone = 0,
@@ -141,8 +149,9 @@ interface ISetupHelper(ISetupHelperVtbl): IUnknown(IUnknownVtbl) {
         pullMaxVersion: PULONGLONG,
     ) -> HRESULT,
 }}
-DEFINE_GUID!{CLSID_SetupConfiguration,
-    0x177f0c4a, 0x1cd3, 0x4de7, 0xa3, 0x2c, 0x71, 0xdb, 0xbb, 0x9f, 0xa3, 0x6d}
+// This should be just called SetupConfiguration but the safe wrapper is already called that...
+RIDL!{#[uuid(0x177f0c4a, 0x1cd3, 0x4de7, 0xa3, 0x2c, 0x71, 0xdb, 0xbb, 0x9f, 0xa3, 0x6d)]
+class SetupConfigurationClass;}
 
 // Safe wrapper around the COM interfaces
 pub struct SetupConfiguration(ComPtr<ISetupConfiguration>);
@@ -150,7 +159,7 @@ impl SetupConfiguration {
     pub fn new() -> Result<SetupConfiguration, i32> {
         let mut obj = null_mut();
         let err = unsafe { CoCreateInstance(
-            &CLSID_SetupConfiguration, null_mut(), CLSCTX_ALL,
+            &SetupConfigurationClass::uuidof(), null_mut(), CLSCTX_ALL,
             &ISetupConfiguration::uuidof(), &mut obj,
         ) };
         if err < 0 { return Err(err); }
